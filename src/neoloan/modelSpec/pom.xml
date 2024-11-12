@@ -66,14 +66,15 @@
               <generatorName>spring</generatorName>
               <modelPackage>com.igorpetrovcm.neoloan.model</modelPackage>
               <modelNameSuffix>DTO</modelNameSuffix>
+              <skipValidateSpec>false</skipValidateSpec>
                <configOptions>
                 <useSpringBoot3>true</useSpringBoot3>
                 <additionalModelTypeAnnotations>
-                  @lombok.Builder
-                  @lombok.Getter
-                  @lombok.EqualsAndHashCode
-                  @lombok.ToString
+                  @lombok.Builder;
+                  @lombok.EqualsAndHashCode;
+                  @lombok.ToString;
                 </additionalModelTypeAnnotations>
+                <useJakartaEe>true</useJakartaEe>
                </configOptions>
             </configuration>
           </execution>
