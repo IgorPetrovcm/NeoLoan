@@ -4,9 +4,6 @@ info:
   title: "Fields for models"
   version: 1.0-SNAPSHOT
 
-# paths:
-#   /:
-
 components:
   schemas:
     Name:
