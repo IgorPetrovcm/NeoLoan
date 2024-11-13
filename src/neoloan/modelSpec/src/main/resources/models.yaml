@@ -26,7 +26,6 @@ components:
         middleName:
           allOf:
             - $ref: 'components.yaml#/components/schemas/Name'
-          nullable: true
         email:
           type: string
           format: email
@@ -52,6 +51,9 @@ components:
           maximum: 6
   
     LoanOffer:
+      require:
+        - statementId
+        - totalAmount
       properties:
         statementId:
           type: string
@@ -60,6 +62,7 @@ components:
           $ref: 'components.yaml#/components/schemas/Amount'
         totalAmount:
           $ref: 'components.yaml#/components/schemas/Amount'
+          minimum: 20000
         term:
           type: integer
         monthlyPayment:
