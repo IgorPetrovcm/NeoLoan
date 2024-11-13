@@ -1,0 +1,79 @@
+openapi: 3.1.0
+
+info:
+  title: "DTO models"
+  description: "Here is a description of all DTO models for NeoLoan"
+  contact:
+    name: Igor Petrov
+    url: "https://github.com/IgorPetrovcm"
+  version: "1.0-SNAPSHOT"
+
+components:
+  schemas:
+    LoanStatementRequest:
+      properties:
+        amount:
+          $ref: 'components.yaml#/components/schemas/Amount'
+        term:
+          type: integer
+          minimum: 6
+        firstName:
+          allOf:
+            - $ref: 'components.yaml#/components/schemas/Name'
+        lastName:
+          allOf:
+            - $ref: 'components.yaml#/components/schemas/Name'
+        middleName:
+          allOf:
+            - $ref: 'components.yaml#/components/schemas/Name'
+        email:
+          type: string
+          format: email
+          pattern: "^[a-z0-9A-Z_!#$%&'*+/=?`{|}~^.-]+@[a-z0-9A-Z.-]+$"
+        birthdate:
+          type: string
+          format: date
+            ## ! issue
+            # TODO: Протестировать на валидацию даты, по моделе : YYYY-MM-DD
+            # *
+            # *: Согласно "RFC 3339, section 5.6" модель согласована с форматом : YYYY-MM-DD,
+            # *: что специфицировано OpenApi
+            ## ! 
+        passportSeries:
+          type: string
+          format: number
+          minimum: 4
+          maximum: 4
+        passportNumber:
+          type: string
+          format: number
+          minimum: 6
+          maximum: 6
+  
+    LoanOffer:
+      require:
+        - statementId
+        - totalAmount
+      properties:
+        statementId:
+          type: string
+          format: uuid
+        requestedAmount:
+          $ref: 'components.yaml#/components/schemas/Amount'
+        totalAmount:
+          $ref: 'components.yaml#/components/schemas/Amount'
+          minimum: 20000
+        term:
+          type: integer
+        monthlyPayment:
+          type: number
+          format: decimal
+        rate:
+          type: number
+          format: decimal
+        isInsuranceEnabled:
+          type: boolean
+        isSalaryClient:
+          type: boolean
+        
+
