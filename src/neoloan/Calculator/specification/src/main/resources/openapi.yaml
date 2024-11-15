@@ -1,0 +1,29 @@
+openapi: 3.1.0
+
+info:
+  title: "Calculator REST API"
+  description: "Калькулятор сервиса NeoLoan"
+  contact:
+    name: Igor Petrov
+    url: "https://github.com/IgorPetrovcm"
+  version: "1.0-SNAPSHOT"
+
+paths:
+  /calculator/offers:
+    description: "Расчет возможных условий кредита"
+    post:
+      requestBody:
+        description: "Данные заявки на кредит"
+        content:
+          application/json:
+            schema:
+              type: LoanStatementRequest
+      responses:
+        "201":
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: LoanOffer
