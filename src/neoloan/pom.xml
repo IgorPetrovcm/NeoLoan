@@ -54,8 +54,6 @@
     </dependencies>
   </dependencyManagement>
   <modules>
-<!--    <module>modelSpec</module>-->
-<!--    <module>Calculator/specification</module>-->
     <module>calculator</module>
   </modules>
   <build>

@@ -15,4 +15,3 @@ components:
       type: number
       format: decimal
       minimum: 20000
-
