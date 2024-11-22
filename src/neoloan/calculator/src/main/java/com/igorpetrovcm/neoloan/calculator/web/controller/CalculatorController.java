@@ -10,9 +10,9 @@ import com.igorpetrovcm.neoloan.calculator.usecase.CreateLoanOffers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.igorpetrovcm.neoloan.model.LoanOfferDTO;
-import com.igorpetrovcm.neoloan.model.LoanStatementRequestDTO;
-import org.springframework.web.bind.annotation.GetMapping;
+import com.igorpetrovcm.neoloan.calculator.model.LoanOfferDTO;
+import com.igorpetrovcm.neoloan.calculator.model.LoanStatementRequestDTO;
+//import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController

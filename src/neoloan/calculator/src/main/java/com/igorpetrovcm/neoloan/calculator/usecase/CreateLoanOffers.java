@@ -1,7 +1,7 @@
 package com.igorpetrovcm.neoloan.calculator.usecase;
 
-import com.igorpetrovcm.neoloan.model.LoanOfferDTO;
-import com.igorpetrovcm.neoloan.model.LoanStatementRequestDTO;
+import com.igorpetrovcm.neoloan.calculator.model.LoanOfferDTO;
+import com.igorpetrovcm.neoloan.calculator.model.LoanStatementRequestDTO;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

@@ -3,16 +3,14 @@ package com.igorpetrovcm.neoloan.calculator.web.exception;
 
 import org.springframework.http.*;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.net.URI;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 @RestControllerAdvice
 public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
