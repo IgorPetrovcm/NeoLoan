@@ -16,16 +16,10 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-validation</artifactId>
-      <version>3.3.5</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springdoc</groupId>
-      <artifactId>springdoc-openapi-ui</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
-      <version>3.3.5</version>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
@@ -91,6 +85,9 @@
               <goal>generate</goal>
             </goals>
             <configuration>
+              <configOptions>
+                <sourceFolder>src/main/java</sourceFolder>
+              </configOptions>
               <inputSpec>${project.basedir}/src/main/resources/openapi.yaml</inputSpec>
               <output>${project.build.directory}/generated-sources/openapi</output>
               <apiPackage>com.igorpetrovcm.neoloan.calculator.api</apiPackage>
