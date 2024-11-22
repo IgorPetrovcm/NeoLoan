@@ -1,8 +1,8 @@
 openapi: 3.1.0
 
 info:
-  title: "DTO models"
-  description: "Here is a description of all DTO models for NeoLoan"
+  title: "DTO models for Calculator"
+  description: "Here is a description of all DTO models for Calculator"
   contact:
     name: Igor Petrov
     url: "https://github.com/IgorPetrovcm"
@@ -43,12 +43,6 @@ components:
         birthdate:
           type: string
           format: date
-            ## ! issue
-            # TODO: Протестировать на валидацию даты, по моделе : YYYY-MM-DD
-            # *
-            # *: Согласно "RFC 3339, section 5.6" модель согласована с форматом : YYYY-MM-DD,
-            # *: что специфицировано OpenApi
-            ## ! 
         passportSeries:
           type: string
           minLength: 4
@@ -83,5 +77,3 @@ components:
           type: boolean
         isSalaryClient:
           type: boolean
-        
-

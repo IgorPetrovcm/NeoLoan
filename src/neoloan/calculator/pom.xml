@@ -5,7 +5,7 @@
     <groupId>com.igorpetrovcm.neoloan</groupId>
     <artifactId>neoloan</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>
+    <relativePath>../pom.xml</relativePath>
   </parent>
   <groupId>com.igorpetrovcm.neoloan.calculator</groupId>
   <artifactId>calculator</artifactId>
@@ -19,6 +19,10 @@
       <version>3.3.5</version>
     </dependency>
     <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-ui</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
       <version>3.3.5</version>
@@ -28,19 +32,24 @@
       <artifactId>lombok</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.igorpetrovcm.neoloan</groupId>
-      <artifactId>modelSpec</artifactId>
-      <version>${project.version}</version>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-ui</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.igorpetrovcm.neoloan.calculator</groupId>
-      <artifactId>specification</artifactId>
-      <version>${project.version}</version>
+      <groupId>org.openapitools</groupId>
+      <artifactId>jackson-databind-nullable</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-actuator</artifactId>
-      <version>3.3.5</version>
+      <groupId>jakarta.validation</groupId>
+      <artifactId>jakarta.validation-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.annotation</groupId>
+      <artifactId>jakarta.annotation-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
     </dependency>
   </dependencies>
   <build>
@@ -56,6 +65,40 @@
             </goals>
             <configuration>
               <mainClass>com.igorpetrovcm.neoloan.calculator.web.App</mainClass>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.openapitools</groupId>
+        <artifactId>openapi-generator-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>generate-models</id>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <inputSpec>${project.basedir}/src/main/resources/models.yaml</inputSpec>
+              <output>${project.build.directory}/generated-sources/openapi</output>
+              <modelPackage>com.igorpetrovcm.neoloan.calculator.model</modelPackage>
+              <modelNameSuffix>DTO</modelNameSuffix>
+            </configuration>
+          </execution>
+          <execution>
+            <id>generate-api</id>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <inputSpec>${project.basedir}/src/main/resources/openapi.yaml</inputSpec>
+              <output>${project.build.directory}/generated-sources/openapi</output>
+              <apiPackage>com.igorpetrovcm.neoloan.calculator.api</apiPackage>
+              <generateSupportingFiles>true</generateSupportingFiles>
+              <schemaMappings>
+                LoanOffer=com.igorpetrovcm.neoloan.calculator.model.LoanOfferDTO,
+                LoanStatementRequest=com.igorpetrovcm.neoloan.calculator.model.LoanStatementRequestDTO
+              </schemaMappings>
             </configuration>
           </execution>
         </executions>
