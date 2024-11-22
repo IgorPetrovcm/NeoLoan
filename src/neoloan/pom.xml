@@ -9,6 +9,16 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-validation</artifactId>
+        <version>3.3.5</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+        <version>3.3.5</version>
+      </dependency>
+      <dependency>
         <groupId>org.springdoc</groupId>
         <artifactId>springdoc-openapi-ui</artifactId>
         <version>1.8.0</version>
@@ -74,20 +84,17 @@
             <generateSupportingFiles>false</generateSupportingFiles>
             <generatorName>spring</generatorName>
             <configOptions>
-              <!--
-                  !TODO
-                  *Проверить добавляется ли аннотация @lombok.AllArgsConstructor
-              -->
               <additionalModelTypeAnnotations>
                 @lombok.EqualsAndHashCode;
                 @lombok.ToString;
                 @lombok.NoArgsConstructor;
-                @lombok.Setter;
+                @lombok.RequiredArgsConstructor;
               </additionalModelTypeAnnotations>
               <interfaceOnly>true</interfaceOnly>
               <requestMappingMode>api_interface</requestMappingMode>
               <useSpringBoot3>true</useSpringBoot3>
               <useSwaggerUI>true</useSwaggerUI>
+              <javaVersion>23</javaVersion>
             </configOptions>
           </configuration>
         </plugin>
