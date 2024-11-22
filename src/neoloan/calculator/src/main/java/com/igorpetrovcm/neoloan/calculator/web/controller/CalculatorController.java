@@ -3,13 +3,12 @@ package com.igorpetrovcm.neoloan.calculator.web.controller;
 import java.util.List;
 
 import com.igorpetrovcm.neoloan.calculator.api.CalculatorApi;
-import com.igorpetrovcm.neoloan.calculator.usecase.CreateLoanOffers;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
 import com.igorpetrovcm.neoloan.calculator.model.LoanOfferDTO;
+import com.igorpetrovcm.neoloan.calculator.usecase.CreateLoanOffers;
 import com.igorpetrovcm.neoloan.calculator.model.LoanStatementRequestDTO;
-import org.springframework.web.bind.annotation.GetMapping;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController

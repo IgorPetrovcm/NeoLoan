@@ -55,7 +55,13 @@ components:
     LoanOffer:
       require:
         - statementId
+        - requestedAmount
         - totalAmount
+        - term
+        - rate
+        - monthlyPayment
+        - isInsuranceEnabled
+        - isSalaryClient
       properties:
         statementId:
           type: string

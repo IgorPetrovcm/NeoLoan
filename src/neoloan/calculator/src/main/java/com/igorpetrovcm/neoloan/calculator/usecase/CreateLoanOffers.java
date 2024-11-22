@@ -2,18 +2,22 @@ package com.igorpetrovcm.neoloan.calculator.usecase;
 
 import com.igorpetrovcm.neoloan.calculator.model.LoanOfferDTO;
 import com.igorpetrovcm.neoloan.calculator.model.LoanStatementRequestDTO;
+import com.igorpetrovcm.neoloan.calculator.usecase.port.MonthlyPaymentCalculator;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class CreateLoanOffers {
-    public List<LoanOfferDTO> createOffers(LoanStatementRequestDTO loanStatement){
-        List<LoanOfferDTO> offers = new ArrayList<LoanOfferDTO>(4);
+    private final MonthlyPaymentCalculator monthlyPaymentCalculator;
 
-        boolean condition = false;
+    public CreateLoanOffers(MonthlyPaymentCalculator monthlyPaymentCalculator){
+        this.monthlyPaymentCalculator = monthlyPaymentCalculator;
+    }
+
+    public List<LoanOfferDTO> createOffers(LoanStatementRequestDTO loanStatement){
+        List<LoanOfferDTO> offers = new ArrayList<>();
 
         for (int i = 0; i < 4; i++){
             LoanOfferDTO offer = new LoanOfferDTO();
@@ -21,33 +25,17 @@ public class CreateLoanOffers {
             offer.setTerm(loanStatement.getTerm());
             offer.setTotalAmount(loanStatement.getAmount());
 
-            BigDecimal monthlyRate = offer.getRate()
-                    .divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP)
-                    .divide(BigDecimal.valueOf(12), 10, RoundingMode.HALF_UP);
-
-            offer.setMonthlyPayment(
-                    offer.getTotalAmount()
-                            .multiply(monthlyRate)
-                            .multiply(monthlyRate.add(BigDecimal.valueOf(1))
-                                    .pow(offer.getTerm()))
-                            .divide(monthlyRate.add(BigDecimal.valueOf(1))
-                                .pow(offer.getTerm())
-                                    .subtract(BigDecimal.valueOf(1)), 3, RoundingMode.HALF_UP)
-            );
+            offer.setMonthlyPayment(monthlyPaymentCalculator.calculating(
+                    offer.getTerm(),
+                    offer.getRate(),
+                    loanStatement.getAmount()
+                ));
 
             offer.setStatementId(UUID.randomUUID());
             offer.setRequestedAmount(loanStatement.getAmount());
 
-            if (i < 2){
-                offer.setIsInsuranceEnabled(!condition);
-                offer.setIsSalaryClient(true);
-            }
-            else {
-                offer.setIsInsuranceEnabled(false);
-                offer.setIsSalaryClient(!condition);
-            }
-
-            condition = !condition;
+            offer.setIsInsuranceEnabled( (i & 2) > 0 ); // 2 = [0000 0000 0000 0010]
+            offer.setIsSalaryClient( (i & 1) > 0 ); // 1 = [0000 0000 0000 0001]
 
             offers.add(offer);
         }
