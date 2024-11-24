@@ -1,4 +1,4 @@
-openapi: 3.1.0
+openapi: 3.0.0
 
 info:
   title: "DTO models for Calculator"
@@ -82,3 +82,46 @@ components:
           type: boolean
         isSalaryClient:
           type: boolean
+
+    Employment:
+      type: object
+      required:
+        - employerINN
+        - employmentStatus
+        - salary
+        - position
+        - workExperienceCurrent
+        - workExperienceTotal
+      properties:
+        employmentStatus:
+          type: string
+          enum: ["UNEMPLOYED", "SELF_EMPLOYED", "EMPLOYED", "BUSINESS_OWNER"]
+        employerINN:
+          type: string
+        salary:
+          $ref: 'components.yaml#/components/schemas/Amount'
+        position:
+          type: string
+          enum: ["WORKER", "MID_MANAGER", "TOP_MANAGER", "OWNER"]
+        workExperienceTotal:
+          type: integer
+        workExperienceCurrent:
+          type: integer
+
+#    ScoringData:
+#      type: object
+#      properties:
+#        amount:
+#          $ref: 'components.yaml#/components/schemas/Amount'
+#        term:
+#          type: integer
+#        firstName:
+#          $ref: 'components.yaml#/components/schemas/Name'
+#        lastName:
+#          $ref: 'components.yaml#/components/schemas/Name'
+#        middleName:
+#          $ref: 'components.yaml#/components/schemas/Name'
+#        gender:
+#          type: string
+#          enum: ["MALE", "FEMALE", "NON_BINARY"]
+#        bir
