@@ -15,8 +15,6 @@ public class ValuesBasedOffersCalculator implements OfferValuesCalculator {
     @Value("${offers-calculator.base-insurance-rate}")
     private volatile BigDecimal insuranceBaseRate;
 
-    private BigDecimal baseAmount;
-
     @Override
     public BigDecimal calculateRate(boolean isInsuranceEnabled, boolean isSalaryClient) {
         int rateAdditional = 0;

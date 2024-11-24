@@ -85,10 +85,6 @@
             <generatorName>spring</generatorName>
             <configOptions>
               <additionalModelTypeAnnotations>
-<!--                @lombok.EqualsAndHashCode;-->
-<!--                @lombok.ToString;-->
-<!--                @lombok.NoArgsConstructor;-->
-<!--                @lombok.RequiredArgsConstructor;-->
                 @lombok.Data
               </additionalModelTypeAnnotations>
               <interfaceOnly>true</interfaceOnly>
