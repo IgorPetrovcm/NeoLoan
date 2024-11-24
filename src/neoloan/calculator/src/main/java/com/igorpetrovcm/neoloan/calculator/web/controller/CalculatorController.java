@@ -1,11 +1,14 @@
 package com.igorpetrovcm.neoloan.calculator.web.controller;
 
+import java.net.URI;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
 
 import com.igorpetrovcm.neoloan.calculator.api.CalculatorApi;
+import com.igorpetrovcm.neoloan.calculator.model.CreditDTO;
 import com.igorpetrovcm.neoloan.calculator.model.LoanOfferDTO;
+import com.igorpetrovcm.neoloan.calculator.model.ScoringDataDTO;
 import com.igorpetrovcm.neoloan.calculator.usecase.CreateLoanOffers;
 import com.igorpetrovcm.neoloan.calculator.model.LoanStatementRequestDTO;
 
@@ -34,5 +37,15 @@ public class CalculatorController implements CalculatorApi {
                 creatorLoanOffers.createOffers(loanStatement),
                 HttpStatus.CREATED
         );
+    }
+
+    @Override
+    public ResponseEntity<CreditDTO> calculatorCalcPost(ScoringDataDTO scoringData){
+        Period periodFromBirth = Period.between(scoringData.getBirthdate(), LocalDate.now());
+        if (periodFromBirth.getYears() - 18 < 0){
+            throw new IllegalArgumentException("date of birth");
+        }
+
+        return new ResponseEntity<>(null, HttpStatus.CREATED);
     }
 }
