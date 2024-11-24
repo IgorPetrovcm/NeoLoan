@@ -73,7 +73,7 @@
               <goal>generate</goal>
             </goals>
             <configuration>
-              <inputSpec>${project.basedir}/src/main/resources/models.yaml</inputSpec>
+              <inputSpec>${project.basedir}/src/main/resources/openapi/models.yaml</inputSpec>
               <output>${project.build.directory}/generated-sources/openapi</output>
               <modelPackage>com.igorpetrovcm.neoloan.calculator.model</modelPackage>
               <modelNameSuffix>DTO</modelNameSuffix>
@@ -88,7 +88,7 @@
               <configOptions>
                 <sourceFolder>src/main/java</sourceFolder>
               </configOptions>
-              <inputSpec>${project.basedir}/src/main/resources/openapi.yaml</inputSpec>
+              <inputSpec>${project.basedir}/src/main/resources/openapi/openapi.yaml</inputSpec>
               <output>${project.build.directory}/generated-sources/openapi</output>
               <apiPackage>com.igorpetrovcm.neoloan.calculator.api</apiPackage>
               <generateSupportingFiles>true</generateSupportingFiles>
