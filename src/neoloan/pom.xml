@@ -85,8 +85,10 @@
             <generatorName>spring</generatorName>
             <configOptions>
               <additionalModelTypeAnnotations>
-                @lombok.Data
+                @lombok.NoArgsConstructor;
+                @lombok.AllArgsConstructor
               </additionalModelTypeAnnotations>
+              <generatedConstructorWithRequiredArgs>false</generatedConstructorWithRequiredArgs>
               <interfaceOnly>true</interfaceOnly>
               <requestMappingMode>api_interface</requestMappingMode>
               <useSpringBoot3>true</useSpringBoot3>
