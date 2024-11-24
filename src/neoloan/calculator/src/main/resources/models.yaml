@@ -70,7 +70,6 @@ components:
           $ref: 'components.yaml#/components/schemas/Amount'
         totalAmount:
           $ref: 'components.yaml#/components/schemas/Amount'
-          minimum: 20000
         term:
           type: integer
         monthlyPayment:

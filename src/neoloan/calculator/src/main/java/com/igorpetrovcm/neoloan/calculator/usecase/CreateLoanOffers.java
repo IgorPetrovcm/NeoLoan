@@ -3,17 +3,26 @@ package com.igorpetrovcm.neoloan.calculator.usecase;
 import com.igorpetrovcm.neoloan.calculator.model.LoanOfferDTO;
 import com.igorpetrovcm.neoloan.calculator.model.LoanStatementRequestDTO;
 import com.igorpetrovcm.neoloan.calculator.usecase.port.MonthlyPaymentCalculator;
+import com.igorpetrovcm.neoloan.calculator.usecase.port.OfferValuesCalculator;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class CreateLoanOffers {
     private final MonthlyPaymentCalculator monthlyPaymentCalculator;
+    private final OfferValuesCalculator offerValuesCalculator;
 
-    public CreateLoanOffers(MonthlyPaymentCalculator monthlyPaymentCalculator){
+    private final OfferRateComparator offerRateComparator = new OfferRateComparator();
+
+    public CreateLoanOffers(
+            MonthlyPaymentCalculator monthlyPaymentCalculator,
+            OfferValuesCalculator offerValuesCalculator)
+    {
         this.monthlyPaymentCalculator = monthlyPaymentCalculator;
+        this.offerValuesCalculator = offerValuesCalculator;
     }
 
     public List<LoanOfferDTO> createOffers(LoanStatementRequestDTO loanStatement){
@@ -21,9 +30,24 @@ public class CreateLoanOffers {
 
         for (int i = 0; i < 4; i++){
             LoanOfferDTO offer = new LoanOfferDTO();
-            offer.setRate(BigDecimal.valueOf(10));
+
             offer.setTerm(loanStatement.getTerm());
-            offer.setTotalAmount(loanStatement.getAmount());
+            offer.setStatementId(UUID.randomUUID());
+            offer.setRequestedAmount(loanStatement.getAmount());
+
+            offer.setIsInsuranceEnabled( (i & 2) > 0 ); // 2 = [0000 0000 0000 0010]
+            offer.setIsSalaryClient( (i & 1) > 0 ); // 1 = [0000 0000 0000 0001]
+
+            offer.setRate(offerValuesCalculator.calculateRate(
+                            offer.getIsInsuranceEnabled(),
+                            offer.getIsSalaryClient()
+            ));
+
+            offer.setTotalAmount(offerValuesCalculator.calculateAmount(
+                    offer.getIsInsuranceEnabled(),
+                    offer.getIsSalaryClient(),
+                    loanStatement.getAmount()
+            ));
 
             offer.setMonthlyPayment(monthlyPaymentCalculator.calculating(
                     offer.getTerm(),
@@ -31,15 +55,18 @@ public class CreateLoanOffers {
                     loanStatement.getAmount()
                 ));
 
-            offer.setStatementId(UUID.randomUUID());
-            offer.setRequestedAmount(loanStatement.getAmount());
-
-            offer.setIsInsuranceEnabled( (i & 2) > 0 ); // 2 = [0000 0000 0000 0010]
-            offer.setIsSalaryClient( (i & 1) > 0 ); // 1 = [0000 0000 0000 0001]
-
             offers.add(offer);
         }
 
-        return offers;
+        return offers.stream()
+                .sorted(offerRateComparator)
+                .collect(Collectors.toList());
+    }
+
+    static class OfferRateComparator implements Comparator<LoanOfferDTO>{
+        @Override
+        public int compare(LoanOfferDTO offer1, LoanOfferDTO offer2){
+            return offer1.getRate().compareTo(offer2.getRate());
+        }
     }
 }
