@@ -6,6 +6,8 @@ import com.igorpetrovcm.neoloan.calculator.usecase.port.MonthlyPaymentCalculator
 import com.igorpetrovcm.neoloan.calculator.usecase.port.OfferValuesCalculator;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.Period;
 
 public class CreateCredit {
     private final MonthlyPaymentCalculator monthlyPaymentCalculator;
@@ -32,6 +34,47 @@ public class CreateCredit {
                 scoringData.getIsInsuranceEnabled(),
                 scoringData.getIsSalaryClient()
         ));
+
+        credit.setRate(credit.getRate()
+                .add(offerValuesCalculator.calculateRate(
+                                scoringData.getEmployment().getEmploymentStatus()
+                        )));
+        if (credit.getRate() == null){
+            return null;
+        }
+
+        credit.setRate(credit.getRate()
+                .add(offerValuesCalculator.calculateRate(
+                        scoringData.getEmployment().getPosition()
+                )));
+
+        credit.setRate(credit.getRate()
+                .add(offerValuesCalculator.calculateRate(
+                        scoringData.getMaritalStatus()
+                )));
+
+        if (scoringData.getAmount().compareTo(
+                scoringData.getEmployment().getSalary()
+                        .multiply(BigDecimal.valueOf(24))) > 0){
+            return null;
+        }
+
+        Period birthPeriod = Period.between(scoringData.getBirthdate(), LocalDate.now());
+        if (birthPeriod.getYears() < 20 || birthPeriod.getYears() > 65){
+            return null;
+        }
+
+        credit.setRate(credit.getRate()
+                .add(offerValuesCalculator.calculateRate(
+                        scoringData.getGender(), birthPeriod.getYears()
+                )));
+
+        if (scoringData.getEmployment().getWorkExperienceTotal() < 18){
+            return null;
+        }
+        if (scoringData.getEmployment().getWorkExperienceCurrent() < 3){
+            return null;
+        }
 
         credit.setMonthlyPayment(monthlyPaymentCalculator.calculating(
                 scoringData.getTerm(),

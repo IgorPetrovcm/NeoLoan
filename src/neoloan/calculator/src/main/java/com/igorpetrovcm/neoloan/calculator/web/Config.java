@@ -2,6 +2,7 @@ package com.igorpetrovcm.neoloan.calculator.web;
 
 import com.igorpetrovcm.neoloan.calculator.adapter.offercalculator.ValuesBasedOffersCalculator;
 import com.igorpetrovcm.neoloan.calculator.adapter.paymentcalculator.AnnuityPaymentCalculator;
+import com.igorpetrovcm.neoloan.calculator.usecase.CreateCredit;
 import com.igorpetrovcm.neoloan.calculator.usecase.CreateLoanOffers;
 import com.igorpetrovcm.neoloan.calculator.usecase.port.MonthlyPaymentCalculator;
 import com.igorpetrovcm.neoloan.calculator.usecase.port.OfferValuesCalculator;
@@ -23,6 +24,11 @@ public class Config {
     @Bean
     public OfferValuesCalculator getOfferValuesCalculator(){
         return new ValuesBasedOffersCalculator();
+    }
+
+    @Bean
+    public CreateCredit getCreatorCredit(){
+        return new CreateCredit(getMonthlyPaymentCalculator(), getOfferValuesCalculator());
     }
 
     @Bean

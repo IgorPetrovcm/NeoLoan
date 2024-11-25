@@ -9,6 +9,7 @@ import com.igorpetrovcm.neoloan.calculator.api.CalculatorApi;
 import com.igorpetrovcm.neoloan.calculator.model.CreditDTO;
 import com.igorpetrovcm.neoloan.calculator.model.LoanOfferDTO;
 import com.igorpetrovcm.neoloan.calculator.model.ScoringDataDTO;
+import com.igorpetrovcm.neoloan.calculator.usecase.CreateCredit;
 import com.igorpetrovcm.neoloan.calculator.usecase.CreateLoanOffers;
 import com.igorpetrovcm.neoloan.calculator.model.LoanStatementRequestDTO;
 
@@ -21,9 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CalculatorController implements CalculatorApi {
     private final CreateLoanOffers creatorLoanOffers;
+    private final CreateCredit createCredit;
 
-    public CalculatorController(CreateLoanOffers creatorLoanOffers){
+    public CalculatorController(CreateLoanOffers creatorLoanOffers, CreateCredit createCredit){
         this.creatorLoanOffers = creatorLoanOffers;
+        this.createCredit = createCredit;
     }
 
     @Override
@@ -46,6 +49,12 @@ public class CalculatorController implements CalculatorApi {
             throw new IllegalArgumentException("date of birth");
         }
 
-        return new ResponseEntity<>(null, HttpStatus.CREATED);
+        CreditDTO credit = createCredit.createCredit(scoringData);
+
+        if (credit == null){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(credit, HttpStatus.CREATED);
     }
 }

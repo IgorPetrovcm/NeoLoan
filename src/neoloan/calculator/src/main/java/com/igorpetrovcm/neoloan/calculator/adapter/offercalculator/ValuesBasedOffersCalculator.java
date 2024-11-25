@@ -1,12 +1,18 @@
 package com.igorpetrovcm.neoloan.calculator.adapter.offercalculator;
 
+import com.igorpetrovcm.neoloan.calculator.model.EmploymentDTO;
+import com.igorpetrovcm.neoloan.calculator.model.ScoringDataDTO;
 import com.igorpetrovcm.neoloan.calculator.usecase.port.OfferValuesCalculator;
+import com.sun.tools.javac.jvm.Gen;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.igorpetrovcm.neoloan.calculator.model.EmploymentDTO.EmploymentStatusEnum.SELF_EMPLOYED;
+import static com.igorpetrovcm.neoloan.calculator.model.EmploymentDTO.EmploymentStatusEnum.UNEMPLOYED;
 
 public class ValuesBasedOffersCalculator implements OfferValuesCalculator {
     @Value("${offers-calculator.base-rate}")
@@ -32,6 +38,62 @@ public class ValuesBasedOffersCalculator implements OfferValuesCalculator {
         }
 
         return baseRate.subtract(BigDecimal.valueOf(rateAdditional));
+    }
+
+    @Override
+    public BigDecimal calculateRate(EmploymentDTO.EmploymentStatusEnum status){
+        switch (status.getValue()) {
+            case ("UNEMPLOYED"):
+                return null;
+            case ("SELF_EMPLOYED"):
+                return BigDecimal.valueOf(2);
+            case ("BUSINESS_OWNER"):
+                return BigDecimal.valueOf(1);
+            default:
+                return BigDecimal.valueOf(0);
+        }
+    }
+
+    @Override
+    public BigDecimal calculateRate(EmploymentDTO.PositionEnum position){
+        switch (position.getValue()){
+            case ("MID_MANAGER"):
+                return BigDecimal.valueOf(-2);
+            case ("TOP_MANAGER"):
+                return BigDecimal.valueOf(-3);
+            default:
+                return BigDecimal.valueOf(0);
+        }
+    }
+
+    @Override
+    public BigDecimal calculateRate(ScoringDataDTO.MaritalStatusEnum maritalStatus){
+        switch (maritalStatus.getValue()){
+            case ("MARRIED"):
+                return BigDecimal.valueOf(-3);
+            case ("DIVORCED"):
+                return BigDecimal.valueOf(1);
+            default:
+                return BigDecimal.valueOf(0);
+        }
+    }
+
+    @Override
+    public BigDecimal calculateRate(ScoringDataDTO.GenderEnum gender, int years){
+        switch (gender.getValue()){
+            case "MALE":
+                if (years > 30 && years < 55){
+                    return BigDecimal.valueOf(-3);
+                }
+                return BigDecimal.valueOf(0);
+            case "FEMALE":
+                if (years > 32 && years < 60){
+                    return BigDecimal.valueOf(-3);
+                }
+                return BigDecimal.valueOf(0);
+            default:
+                return BigDecimal.valueOf(7);
+        }
     }
 
     @Override
