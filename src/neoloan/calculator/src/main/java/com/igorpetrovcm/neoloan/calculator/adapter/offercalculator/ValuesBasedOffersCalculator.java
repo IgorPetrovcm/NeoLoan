@@ -52,6 +52,22 @@ public class ValuesBasedOffersCalculator implements OfferValuesCalculator {
         return newAmount;
     }
 
+    @Override
+    public BigDecimal calculatePsk(BigDecimal amount, BigDecimal monthlyPayment, int term){
+        BigDecimal totalPayment = monthlyPayment.multiply(BigDecimal.valueOf(term));
+        BigDecimal overPayment = totalPayment.subtract(amount);
+
+        BigDecimal psk = overPayment
+                .divide(amount, 10, RoundingMode.HALF_UP)
+                .multiply(BigDecimal.valueOf(12))
+                .divide(BigDecimal.valueOf(term)
+                        .divide(BigDecimal.valueOf(12), 10, RoundingMode.HALF_UP),
+                10, RoundingMode.HALF_UP)
+                .multiply(BigDecimal.valueOf(100));
+
+        return psk.setScale(2, RoundingMode.HALF_UP);
+    }
+
     private BigDecimal calculateInsurance(BigDecimal amount){
         BigDecimal insuranceProgressiveRate = insuranceBaseRate;
         BigDecimal totalInsurance = BigDecimal.valueOf(0);

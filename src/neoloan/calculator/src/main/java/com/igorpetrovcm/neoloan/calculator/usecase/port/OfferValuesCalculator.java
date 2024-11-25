@@ -7,4 +7,5 @@ public interface OfferValuesCalculator {
     BigDecimal calculateAmount(boolean isInsuranceEnabled,
                                boolean isSalaryClient,
                                BigDecimal requestedAmount);
+    BigDecimal calculatePsk(BigDecimal amount, BigDecimal monthlyPayment, int term);
 }
