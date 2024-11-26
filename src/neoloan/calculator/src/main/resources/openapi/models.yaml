@@ -157,7 +157,6 @@ components:
           format: date
         passportIssueBranch:
           type: string
-          format: date
         maritalStatus:
           type: string
           enum: ["MARRIED", "DIVORCED", "SINGLE", "WIDOW_WIDOWER"]

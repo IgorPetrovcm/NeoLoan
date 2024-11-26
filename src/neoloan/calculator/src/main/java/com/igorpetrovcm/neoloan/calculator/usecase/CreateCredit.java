@@ -85,9 +85,9 @@ public class CreateCredit {
         credit.setPsk(offerValuesCalculator.calculatePsk(
                 credit.getAmount(),
                 credit.getMonthlyPayment(),
-                credit.getTerm()
+                scoringData.getTerm()
         ));
 
-        return new CreditDTO();
+        return credit;
     }
 }
