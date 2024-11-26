@@ -1,11 +1,11 @@
 package com.igorpetrovcm.neoloan.calculator.web.controller;
 
-import java.net.URI;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
 
 import com.igorpetrovcm.neoloan.calculator.api.CalculatorApi;
+import com.igorpetrovcm.neoloan.calculator.domain.Statement;
 import com.igorpetrovcm.neoloan.calculator.model.CreditDTO;
 import com.igorpetrovcm.neoloan.calculator.model.LoanOfferDTO;
 import com.igorpetrovcm.neoloan.calculator.model.ScoringDataDTO;
@@ -13,21 +13,19 @@ import com.igorpetrovcm.neoloan.calculator.usecase.CreateCredit;
 import com.igorpetrovcm.neoloan.calculator.usecase.CreateLoanOffers;
 import com.igorpetrovcm.neoloan.calculator.model.LoanStatementRequestDTO;
 
-import org.springframework.core.MethodParameter;
+import com.igorpetrovcm.neoloan.calculator.web.mapper.StatementMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 public class CalculatorController implements CalculatorApi {
     private final CreateLoanOffers creatorLoanOffers;
     private final CreateCredit createCredit;
 
-    public CalculatorController(CreateLoanOffers creatorLoanOffers, CreateCredit createCredit){
-        this.creatorLoanOffers = creatorLoanOffers;
-        this.createCredit = createCredit;
-    }
+    private final StatementMapper statementMapper;
 
     @Override
     public ResponseEntity<List<LoanOfferDTO>> calculatorOffersPost(LoanStatementRequestDTO loanStatement){

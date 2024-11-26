@@ -3,7 +3,6 @@ package com.igorpetrovcm.neoloan.calculator.adapter.offercalculator;
 import com.igorpetrovcm.neoloan.calculator.model.EmploymentDTO;
 import com.igorpetrovcm.neoloan.calculator.model.ScoringDataDTO;
 import com.igorpetrovcm.neoloan.calculator.usecase.port.OfferValuesCalculator;
-import com.sun.tools.javac.jvm.Gen;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
