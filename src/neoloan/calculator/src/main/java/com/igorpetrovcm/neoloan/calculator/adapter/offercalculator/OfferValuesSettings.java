@@ -259,29 +259,7 @@ public class OfferValuesSettings implements OfferSettings {
                                 4, RoundingMode.CEILING)
                         .multiply(BigDecimal.valueOf(100));
 
-        BigDecimal i = BigDecimal.valueOf(0);
-        BigDecimal x = BigDecimal.valueOf(1);
-        BigDecimal x_m = BigDecimal.valueOf(0);
-        BigDecimal s = BigDecimal.valueOf(0.000001);
-        while (x.compareTo(BigDecimal.valueOf(0)) > 0){
-            x_m = x;
-            x = BigDecimal.valueOf(0);
-            for (int k = 0; k < termAlias; k++){
-                x = x.add(paymentsInDays.get(k).getDebtPayment())
-                        .divide(E[k].multiply(i).add(BigDecimal.valueOf(1))
-                                .multiply(i.add(BigDecimal.valueOf(1))
-                                        .pow(Q[k])), 2, RoundingMode.HALF_UP);
-            }
-            i = i.add(s);
-        }
-
-        if (x.compareTo(x_m) > 0){
-            i = i.subtract(s);
-        }
-
-        offer.setPsk(
-                cbp.multiply(i).multiply(BigDecimal.valueOf(100))
-        );
+        offer.setPsk(psk);
 
         return this;
     }
