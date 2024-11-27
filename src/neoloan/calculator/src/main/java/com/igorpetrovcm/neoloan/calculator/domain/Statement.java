@@ -1,7 +1,5 @@
 package com.igorpetrovcm.neoloan.calculator.domain;
 
-import com.igorpetrovcm.neoloan.calculator.model.EmploymentDTO;
-import com.igorpetrovcm.neoloan.calculator.model.ScoringDataDTO;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -44,7 +42,7 @@ public class Statement {
         }
     }
 
-    private ScoringDataDTO.GenderEnum gender;
+    private GenderEnum gender;
 
     private LocalDate birthdate;
 
@@ -54,7 +52,7 @@ public class Statement {
 
     private LocalDate passportIssueDate;
 
-    private LocalDate passportIssueBranch;
+    private String passportIssueBranch;
 
     public enum MaritalStatusEnum {
         MARRIED("MARRIED"),

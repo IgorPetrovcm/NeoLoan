@@ -1,10 +1,13 @@
 package com.igorpetrovcm.neoloan.calculator.web;
 
+import com.igorpetrovcm.neoloan.calculator.adapter.offercalculator.OfferValuesSettings;
 import com.igorpetrovcm.neoloan.calculator.adapter.offercalculator.ValuesBasedOffersCalculator;
 import com.igorpetrovcm.neoloan.calculator.adapter.paymentcalculator.AnnuityPaymentCalculator;
 import com.igorpetrovcm.neoloan.calculator.usecase.CreateCredit;
 import com.igorpetrovcm.neoloan.calculator.usecase.CreateLoanOffers;
+import com.igorpetrovcm.neoloan.calculator.usecase.CreateOffers;
 import com.igorpetrovcm.neoloan.calculator.usecase.port.MonthlyPaymentCalculator;
+import com.igorpetrovcm.neoloan.calculator.usecase.port.OfferSettings;
 import com.igorpetrovcm.neoloan.calculator.usecase.port.OfferValuesCalculator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,12 +30,26 @@ public class Config {
     }
 
     @Bean
+    public OfferSettings getOfferSettings(){
+        return new OfferValuesSettings();
+    }
+
+    @Bean
     public CreateCredit getCreatorCredit(){
-        return new CreateCredit(getMonthlyPaymentCalculator(), getOfferValuesCalculator());
+        return new CreateCredit(getMonthlyPaymentCalculator(),
+                getOfferValuesCalculator(),
+                getOfferSettings());
     }
 
     @Bean
     public CreateLoanOffers getCreatorLoanOffers(){
-        return new CreateLoanOffers(getMonthlyPaymentCalculator(), getOfferValuesCalculator());
+        return new CreateLoanOffers(getMonthlyPaymentCalculator(),
+                getOfferValuesCalculator(),
+                getOfferSettings());
+    }
+
+    @Bean
+    public CreateOffers getOffersCreator(){
+        return new CreateOffers(getOfferSettings());
     }
 }

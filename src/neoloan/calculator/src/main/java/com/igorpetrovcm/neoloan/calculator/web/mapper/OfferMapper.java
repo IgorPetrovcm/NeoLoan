@@ -6,8 +6,11 @@ import com.igorpetrovcm.neoloan.calculator.model.LoanOfferDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 
+import java.util.List;
+
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface OfferMapper {
     LoanOfferDTO toLoanOffer(Offer offer);
     CreditDTO toCredit(Offer offer);
+    List<LoanOfferDTO> toLoanOffers(List<Offer> offers);
 }

@@ -13,6 +13,8 @@ import com.igorpetrovcm.neoloan.calculator.usecase.CreateCredit;
 import com.igorpetrovcm.neoloan.calculator.usecase.CreateLoanOffers;
 import com.igorpetrovcm.neoloan.calculator.model.LoanStatementRequestDTO;
 
+import com.igorpetrovcm.neoloan.calculator.usecase.CreateOffers;
+import com.igorpetrovcm.neoloan.calculator.web.mapper.OfferMapper;
 import com.igorpetrovcm.neoloan.calculator.web.mapper.StatementMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,10 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class CalculatorController implements CalculatorApi {
-    private final CreateLoanOffers creatorLoanOffers;
     private final CreateCredit createCredit;
+    private final CreateOffers createOffers;
 
     private final StatementMapper statementMapper;
+    private final OfferMapper offerMapper;
 
     @Override
     public ResponseEntity<List<LoanOfferDTO>> calculatorOffersPost(LoanStatementRequestDTO loanStatement){
@@ -34,8 +37,11 @@ public class CalculatorController implements CalculatorApi {
             throw new IllegalArgumentException("date of birth");
         }
 
+        Statement statement = statementMapper.toStatement(loanStatement);
+        List<LoanOfferDTO> offers = offerMapper.toLoanOffers(createOffers.create(statement));
+
         return new ResponseEntity<>(
-                creatorLoanOffers.createOffers(loanStatement),
+                offers,
                 HttpStatus.CREATED
         );
     }
@@ -47,11 +53,8 @@ public class CalculatorController implements CalculatorApi {
             throw new IllegalArgumentException("date of birth");
         }
 
-        CreditDTO credit = createCredit.createCredit(scoringData);
-
-        if (credit == null){
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
+        Statement statement = statementMapper.toStatement(scoringData);
+        CreditDTO credit = offerMapper.toCredit(createCredit.create(statement));
 
         return new ResponseEntity<>(credit, HttpStatus.CREATED);
     }
