@@ -1,4 +1,4 @@
-package com.igorpetrovcm.neoloan.calculator.web;
+package com.igorpetrovcm.neoloan.calculator.web.config;
 
 import com.igorpetrovcm.neoloan.calculator.adapter.offercalculator.OfferValuesSettings;
 import com.igorpetrovcm.neoloan.calculator.adapter.paymentcalculator.AnnuityPaymentCalculator;
