@@ -10,7 +10,6 @@ import com.igorpetrovcm.neoloan.calculator.model.CreditDTO;
 import com.igorpetrovcm.neoloan.calculator.model.LoanOfferDTO;
 import com.igorpetrovcm.neoloan.calculator.model.ScoringDataDTO;
 import com.igorpetrovcm.neoloan.calculator.usecase.CreateCredit;
-import com.igorpetrovcm.neoloan.calculator.usecase.CreateLoanOffers;
 import com.igorpetrovcm.neoloan.calculator.model.LoanStatementRequestDTO;
 
 import com.igorpetrovcm.neoloan.calculator.usecase.CreateOffers;
