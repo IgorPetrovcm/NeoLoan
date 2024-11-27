@@ -157,7 +157,6 @@ components:
           format: date
         passportIssueBranch:
           type: string
-          format: date
         maritalStatus:
           type: string
           enum: ["MARRIED", "DIVORCED", "SINGLE", "WIDOW_WIDOWER"]
@@ -184,6 +183,9 @@ components:
       properties:
         number:
           type: integer
+        date:
+          type: string
+          format: date
         totalAmount:
           $ref: 'components.yaml#/components/schemas/Amount'
         interestPayment:

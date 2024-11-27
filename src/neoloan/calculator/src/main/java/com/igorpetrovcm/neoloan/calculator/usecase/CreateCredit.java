@@ -1,50 +1,31 @@
 package com.igorpetrovcm.neoloan.calculator.usecase;
 
-import com.igorpetrovcm.neoloan.calculator.model.CreditDTO;
-import com.igorpetrovcm.neoloan.calculator.model.ScoringDataDTO;
-import com.igorpetrovcm.neoloan.calculator.usecase.port.MonthlyPaymentCalculator;
-import com.igorpetrovcm.neoloan.calculator.usecase.port.OfferValuesCalculator;
+import com.igorpetrovcm.neoloan.calculator.domain.Offer;
+import com.igorpetrovcm.neoloan.calculator.domain.Statement;
+import com.igorpetrovcm.neoloan.calculator.usecase.port.OfferSettings;
+import lombok.RequiredArgsConstructor;
 
-import java.math.BigDecimal;
-
+@RequiredArgsConstructor
 public class CreateCredit {
-    private final MonthlyPaymentCalculator monthlyPaymentCalculator;
-    private final OfferValuesCalculator offerValuesCalculator;
+    private final OfferSettings offerSettings;
 
-    public CreateCredit(
-            MonthlyPaymentCalculator monthlyPaymentCalculator,
-            OfferValuesCalculator offerValuesCalculator
-    ){
-        this.monthlyPaymentCalculator = monthlyPaymentCalculator;
-        this.offerValuesCalculator = offerValuesCalculator;
-    }
+    public Offer create(Statement statement){
+        Offer offer = new Offer();
 
-    public CreditDTO createCredit(ScoringDataDTO scoringData){
-        CreditDTO credit = new CreditDTO();
+        try{
+            offerSettings
+                    .setRequestedAmount(statement, offer)
+                    .setTerm(statement, offer)
+                    .setAmount(statement, offer)
+                    .setRate(statement, offer)
+                    .setMonthlyPayment(offer)
+                    .setPaymentScheduleElements(offer)
+                    .setPsk(offer);
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
 
-        credit.setAmount(offerValuesCalculator.calculateAmount(
-                scoringData.getIsInsuranceEnabled(),
-                scoringData.getIsSalaryClient(),
-                scoringData.getAmount()
-        ));
-
-        credit.setRate(offerValuesCalculator.calculateRate(
-                scoringData.getIsInsuranceEnabled(),
-                scoringData.getIsSalaryClient()
-        ));
-
-        credit.setMonthlyPayment(monthlyPaymentCalculator.calculating(
-                scoringData.getTerm(),
-                credit.getRate(),
-                credit.getAmount()
-        ));
-
-        credit.setPsk(offerValuesCalculator.calculatePsk(
-                credit.getAmount(),
-                credit.getMonthlyPayment(),
-                credit.getTerm()
-        ));
-
-        return new CreditDTO();
+        return offer;
     }
 }

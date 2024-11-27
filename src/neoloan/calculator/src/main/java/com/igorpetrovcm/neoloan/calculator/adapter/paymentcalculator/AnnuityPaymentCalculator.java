@@ -11,17 +11,18 @@ public class AnnuityPaymentCalculator implements MonthlyPaymentCalculator {
         BigDecimal monthlyPayment;
 
         BigDecimal monthlyRate = rate
-                .divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP)
-                .divide(BigDecimal.valueOf(12), 10, RoundingMode.HALF_UP);
+                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP)
+                .divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_UP);
 
-        monthlyPayment = amount
-                .multiply(monthlyRate)
-                .multiply(monthlyRate.add(BigDecimal.valueOf(1))
-                        .pow(term))
-                .divide(monthlyRate.add(BigDecimal.valueOf(1))
-                        .pow(term)
-                        .subtract(BigDecimal.valueOf(1)),3, RoundingMode.HALF_UP
-                    );
+        BigDecimal temp = monthlyRate.add(
+                monthlyRate.divide(
+                        monthlyRate.add(BigDecimal.valueOf(1))
+                                .pow(term)
+                                .subtract(BigDecimal.valueOf(1)),
+                2, RoundingMode.HALF_UP)
+        );
+
+        monthlyPayment = amount.multiply(temp);
 
         return monthlyPayment;
     }
