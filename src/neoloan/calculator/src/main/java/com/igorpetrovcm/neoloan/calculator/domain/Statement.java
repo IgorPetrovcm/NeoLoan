@@ -79,11 +79,11 @@ public class Statement {
         }
     }
 
-    private ScoringDataDTO.MaritalStatusEnum maritalStatus;
+    private MaritalStatusEnum maritalStatus;
 
     private Integer dependentAmount;
 
-    private EmploymentDTO employment;
+    private Employment employment;
 
     private String accountNumber;
 

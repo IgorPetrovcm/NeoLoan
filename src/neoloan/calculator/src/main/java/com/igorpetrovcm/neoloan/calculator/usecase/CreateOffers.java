@@ -21,10 +21,18 @@ public class CreateOffers {
             statement.setIsInsuranceEnabled((i & 2) > 0);
             statement.setIsSalaryClient((i & 1) > 0);
 
-            offerSettings
-                    .setId(offer)
-                    .setTerm(statement, offer)
-                    .setRequestedAmount(statement, offer);
+            try{
+                offerSettings
+                        .setId(offer)
+                        .setTerm(statement, offer)
+                        .setRequestedAmount(statement, offer)
+                        .setAmount(statement, offer)
+                        .setRate(statement, offer)
+                        .setMonthlyPayment(offer);
+            }
+            catch (Exception ex){
+                ex.printStackTrace();
+            }
 
             offers.add(offer);
         }

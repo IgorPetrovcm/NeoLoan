@@ -31,7 +31,7 @@ public class Config {
 
     @Bean
     public OfferSettings getOfferSettings(){
-        return new OfferValuesSettings();
+        return new OfferValuesSettings(getMonthlyPaymentCalculator());
     }
 
     @Bean

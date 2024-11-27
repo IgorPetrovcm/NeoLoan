@@ -10,6 +10,6 @@ public interface OfferSettings {
     OfferSettings setRequestedAmount(Statement statement, Offer offer);
     OfferSettings setAmount(Statement statement, Offer offer);
     OfferSettings setRate(Statement statement, Offer offer);
-    OfferSettings setMonthlyPayment(Statement statement, Offer offer);
+    OfferSettings setMonthlyPayment(Offer offer);
     OfferSettings setPsk(Statement statement, Offer offer);
 }

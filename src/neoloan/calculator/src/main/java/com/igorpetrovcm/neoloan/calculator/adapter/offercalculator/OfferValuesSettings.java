@@ -4,7 +4,9 @@ import com.igorpetrovcm.neoloan.calculator.domain.Employment;
 import com.igorpetrovcm.neoloan.calculator.domain.Offer;
 import com.igorpetrovcm.neoloan.calculator.domain.Statement;
 import com.igorpetrovcm.neoloan.calculator.usecase.exception.OfferSettingsValueException;
+import com.igorpetrovcm.neoloan.calculator.usecase.port.MonthlyPaymentCalculator;
 import com.igorpetrovcm.neoloan.calculator.usecase.port.OfferSettings;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
@@ -16,7 +18,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+@RequiredArgsConstructor
 public class OfferValuesSettings implements OfferSettings {
+
+    private final MonthlyPaymentCalculator monthlyPaymentCalculator;
 
     @Value("${offers-calculator.base-rate}")
     private BigDecimal baseRate;
@@ -28,7 +33,6 @@ public class OfferValuesSettings implements OfferSettings {
     public OfferSettings validateValues(Statement statement){
         Objects.requireNonNull(statement.getBirthdate());
         Objects.requireNonNull(statement.getEmployment());
-//        Objects.
 
         int yearsOld = Period.between(statement.getBirthdate(), LocalDate.now())
                 .getYears();
@@ -82,6 +86,7 @@ public class OfferValuesSettings implements OfferSettings {
             offer.setTotalAmount(statement.getAmount());
             offer.setIsInsuranceEnabled(true);
             offer.setIsSalaryClient(true);
+            return this;
         }
 
         if (!statement.getIsInsuranceEnabled()){
@@ -95,6 +100,8 @@ public class OfferValuesSettings implements OfferSettings {
             );
 
             offer.setIsInsuranceEnabled(true);
+            offer.setIsSalaryClient(false);
+            return this;
         }
 
         if (statement.getIsSalaryClient()){
@@ -125,6 +132,9 @@ public class OfferValuesSettings implements OfferSettings {
 
         if (statement.getEmployment() != null){
             Employment employmentAlias = statement.getEmployment();
+            Objects.requireNonNull(employmentAlias.getEmploymentStatus());
+            Objects.requireNonNull(employmentAlias.getPosition());
+
             switch (employmentAlias.getEmploymentStatus()){
                 case UNEMPLOYED:
                     throw new OfferSettingsValueException("unemployed");
@@ -150,9 +160,9 @@ public class OfferValuesSettings implements OfferSettings {
             }
         }
 
-        if (statement.getBirthdate() != null){
-            int yearsOld = Period.between(statement.getBirthdate(), LocalDate.now())
-                    .getYears();
+        if (statement.getGender() != null){
+            Objects.requireNonNull(statement.getBirthdate());
+            int yearsOld = Period.between(statement.getBirthdate(), LocalDate.now()).getYears();
 
             switch (statement.getGender()){
                 case MALE:
@@ -190,7 +200,12 @@ public class OfferValuesSettings implements OfferSettings {
     }
 
     @Override
-    public OfferSettings setMonthlyPayment(Statement statement, Offer offer) {
+    public OfferSettings setMonthlyPayment(Offer offer) {
+        offer.setMonthlyPayment(monthlyPaymentCalculator.calculating(
+                offer.getTerm(),
+                offer.getRate(),
+                offer.getTotalAmount()));
+
         return this;
     }
 
