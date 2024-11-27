@@ -250,26 +250,14 @@ public class OfferValuesSettings implements OfferSettings {
 
     @Override
     public OfferSettings setPsk(Offer offer) {
-        int termAlias = offer.getTerm();
-        List<PaymentScheduleElement> paymentsInDays = offer.getPaymentSchedule();
-
-        int bp = 30; //базовый период
-        BigDecimal cbp = BigDecimal.valueOf(365).divide(BigDecimal.valueOf(bp), 2, RoundingMode.HALF_UP); //число базовых периодов в году
-
-        long daysOfIssueLoan[] = new long[termAlias];
-        for (int i = 0; i < termAlias; i++){
-            daysOfIssueLoan[i] = ChronoUnit.DAYS.between(paymentsInDays.get(0).getDate(), paymentsInDays.get(i).getDate());
-        }
-
-        BigDecimal E[] = new BigDecimal[termAlias];
-        int Q[] = new int[termAlias];
-
-        for (int i = 0; i < termAlias; i++){
-            E[i] = BigDecimal.valueOf(daysOfIssueLoan[i] % bp)
-                    .divide(BigDecimal.valueOf(bp), 3, RoundingMode.HALF_UP);
-            Double qFloor = Math.floor(daysOfIssueLoan[i] / bp);
-            Q[i] = qFloor.intValue();
-        }
+        BigDecimal psk =
+                offer.getTotalAmount()
+                        .divide(offer.getRequestedAmount(), 4, RoundingMode.CEILING)
+                        .subtract(BigDecimal.valueOf(1))
+                        .divide(BigDecimal.valueOf(offer.getTerm())
+                                .divide(BigDecimal.valueOf(12), 4, RoundingMode.CEILING),
+                                4, RoundingMode.CEILING)
+                        .multiply(BigDecimal.valueOf(100));
 
         BigDecimal i = BigDecimal.valueOf(0);
         BigDecimal x = BigDecimal.valueOf(1);

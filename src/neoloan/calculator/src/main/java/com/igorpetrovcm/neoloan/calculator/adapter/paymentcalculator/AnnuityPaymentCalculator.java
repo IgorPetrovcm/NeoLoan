@@ -8,18 +8,19 @@ import java.math.RoundingMode;
 public class AnnuityPaymentCalculator implements MonthlyPaymentCalculator {
     @Override
     public BigDecimal calculating(int term, BigDecimal rate, BigDecimal amount) {
-        BigDecimal monthlyPayment;
+        BigDecimal monthlyPayment = new BigDecimal(0);
+        monthlyPayment.setScale(2);
 
         BigDecimal monthlyRate = rate
-                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP)
-                .divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_UP);
+                .divide(BigDecimal.valueOf(100), 4, RoundingMode.CEILING)
+                .divide(BigDecimal.valueOf(12), 4, RoundingMode.CEILING);
 
         BigDecimal temp = monthlyRate.add(
                 monthlyRate.divide(
                         monthlyRate.add(BigDecimal.valueOf(1))
                                 .pow(term)
                                 .subtract(BigDecimal.valueOf(1)),
-                2, RoundingMode.HALF_UP)
+                        RoundingMode.CEILING)
         );
 
         monthlyPayment = amount.multiply(temp);
