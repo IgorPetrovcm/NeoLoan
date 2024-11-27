@@ -3,6 +3,7 @@ package com.igorpetrovcm.neoloan.calculator.domain;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 @NoArgsConstructor
@@ -26,4 +27,6 @@ public class Offer {
     private Boolean isSalaryClient;
 
     private BigDecimal psk;
+
+    private List<PaymentScheduleElement> paymentSchedule;
 }

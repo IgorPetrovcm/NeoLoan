@@ -2,6 +2,7 @@ package com.igorpetrovcm.neoloan.calculator.adapter.offercalculator;
 
 import com.igorpetrovcm.neoloan.calculator.domain.Employment;
 import com.igorpetrovcm.neoloan.calculator.domain.Offer;
+import com.igorpetrovcm.neoloan.calculator.domain.PaymentScheduleElement;
 import com.igorpetrovcm.neoloan.calculator.domain.Statement;
 import com.igorpetrovcm.neoloan.calculator.usecase.exception.OfferSettingsValueException;
 import com.igorpetrovcm.neoloan.calculator.usecase.port.MonthlyPaymentCalculator;
@@ -13,6 +14,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -210,7 +212,89 @@ public class OfferValuesSettings implements OfferSettings {
     }
 
     @Override
-    public OfferSettings setPsk(Statement statement, Offer offer) {
+    public OfferSettings setPaymentScheduleElements(Offer offer){
+        List<PaymentScheduleElement> schedule = new ArrayList<>();
+
+        LocalDate today = LocalDate.now();
+
+        PaymentScheduleElement firstPayment = new PaymentScheduleElement();
+        firstPayment.setNumber(0);
+        firstPayment.setDate(today);
+        firstPayment.setTotalAmount(offer.getTotalAmount());
+        firstPayment.setDebtPayment(offer.getRequestedAmount().negate());
+        firstPayment.setRemainingDebt(offer.getTotalAmount());
+
+        schedule.add(firstPayment);
+
+        for (int i = 1; i < offer.getTerm(); i++){
+            LocalDate paymentDay = today.plusMonths(i);
+
+            PaymentScheduleElement paymentElement = new PaymentScheduleElement();
+            paymentElement.setNumber(i);
+            paymentElement.setTotalAmount(offer.getTotalAmount());
+            paymentElement.setDate(paymentDay);
+            paymentElement.setDebtPayment(offer.getMonthlyPayment());
+            paymentElement.setRemainingDebt(offer.getTotalAmount()
+                    .subtract(offer.getMonthlyPayment()
+                            .multiply(BigDecimal.valueOf(i))
+                    )
+            );
+
+            schedule.add(paymentElement);
+        }
+
+        offer.setPaymentSchedule(schedule);
+
+        return this;
+    }
+
+    @Override
+    public OfferSettings setPsk(Offer offer) {
+        int termAlias = offer.getTerm();
+        List<PaymentScheduleElement> paymentsInDays = offer.getPaymentSchedule();
+
+        int bp = 30; //базовый период
+        BigDecimal cbp = BigDecimal.valueOf(365).divide(BigDecimal.valueOf(bp), 2, RoundingMode.HALF_UP); //число базовых периодов в году
+
+        long daysOfIssueLoan[] = new long[termAlias];
+        for (int i = 0; i < termAlias; i++){
+            daysOfIssueLoan[i] = ChronoUnit.DAYS.between(paymentsInDays.get(0).getDate(), paymentsInDays.get(i).getDate());
+        }
+
+        BigDecimal E[] = new BigDecimal[termAlias];
+        int Q[] = new int[termAlias];
+
+        for (int i = 0; i < termAlias; i++){
+            E[i] = BigDecimal.valueOf(daysOfIssueLoan[i] % bp)
+                    .divide(BigDecimal.valueOf(bp), 3, RoundingMode.HALF_UP);
+            Double qFloor = Math.floor(daysOfIssueLoan[i] / bp);
+            Q[i] = qFloor.intValue();
+        }
+
+        BigDecimal i = BigDecimal.valueOf(0);
+        BigDecimal x = BigDecimal.valueOf(1);
+        BigDecimal x_m = BigDecimal.valueOf(0);
+        BigDecimal s = BigDecimal.valueOf(0.000001);
+        while (x.compareTo(BigDecimal.valueOf(0)) > 0){
+            x_m = x;
+            x = BigDecimal.valueOf(0);
+            for (int k = 0; k < termAlias; k++){
+                x = x.add(paymentsInDays.get(k).getDebtPayment())
+                        .divide(E[k].multiply(i).add(BigDecimal.valueOf(1))
+                                .multiply(i.add(BigDecimal.valueOf(1))
+                                        .pow(Q[k])), 2, RoundingMode.HALF_UP);
+            }
+            i = i.add(s);
+        }
+
+        if (x.compareTo(x_m) > 0){
+            i = i.subtract(s);
+        }
+
+        offer.setPsk(
+                cbp.multiply(i).multiply(BigDecimal.valueOf(100))
+        );
+
         return this;
     }
 

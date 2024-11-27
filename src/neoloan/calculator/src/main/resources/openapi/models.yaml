@@ -183,6 +183,9 @@ components:
       properties:
         number:
           type: integer
+        date:
+          type: string
+          format: date
         totalAmount:
           $ref: 'components.yaml#/components/schemas/Amount'
         interestPayment:
