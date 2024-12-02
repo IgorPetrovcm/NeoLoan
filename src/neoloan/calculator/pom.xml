@@ -15,17 +15,17 @@
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-validation</artifactId>
-      <version>3.3.5</version>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <version>3.3.1</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.springdoc</groupId>
-      <artifactId>springdoc-openapi-ui</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-validation</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
-      <version>3.3.5</version>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
@@ -51,6 +51,11 @@
       <groupId>jakarta.servlet</groupId>
       <artifactId>jakarta.servlet-api</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct</artifactId>
+      <version>1.5.5.Final</version>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -58,16 +63,6 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <version>3.3.5</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <mainClass>com.igorpetrovcm.neoloan.calculator.web.App</mainClass>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>org.openapitools</groupId>
@@ -79,7 +74,7 @@
               <goal>generate</goal>
             </goals>
             <configuration>
-              <inputSpec>${project.basedir}/src/main/resources/models.yaml</inputSpec>
+              <inputSpec>${project.basedir}/src/main/resources/openapi/models.yaml</inputSpec>
               <output>${project.build.directory}/generated-sources/openapi</output>
               <modelPackage>com.igorpetrovcm.neoloan.calculator.model</modelPackage>
               <modelNameSuffix>DTO</modelNameSuffix>
@@ -91,13 +86,20 @@
               <goal>generate</goal>
             </goals>
             <configuration>
-              <inputSpec>${project.basedir}/src/main/resources/openapi.yaml</inputSpec>
+              <configOptions>
+                <sourceFolder>src/main/java</sourceFolder>
+              </configOptions>
+              <inputSpec>${project.basedir}/src/main/resources/openapi/openapi.yaml</inputSpec>
               <output>${project.build.directory}/generated-sources/openapi</output>
               <apiPackage>com.igorpetrovcm.neoloan.calculator.api</apiPackage>
               <generateSupportingFiles>true</generateSupportingFiles>
               <schemaMappings>
                 LoanOffer=com.igorpetrovcm.neoloan.calculator.model.LoanOfferDTO,
-                LoanStatementRequest=com.igorpetrovcm.neoloan.calculator.model.LoanStatementRequestDTO
+                LoanStatementRequest=com.igorpetrovcm.neoloan.calculator.model.LoanStatementRequestDTO,
+                Employment=com.igorpetrovcm.neoloan.calculator.model.EmploymentDTO,
+                ScoringData=com.igorpetrovcm.neoloan.calculator.model.ScoringDataDTO,
+                PaymentScheduleElement=com.igorpetrovcm.neoloan.calculator.model.PaymentScheduleElementDTO,
+                Credit=com.igorpetrovcm.neoloan.calculator.model.CreditDTO
               </schemaMappings>
             </configuration>
           </execution>
@@ -121,6 +123,25 @@
               <mainClass>com.igorpetrovcm.neoloan.calculator.web.App</mainClass>
             </transformer>
           </transformers>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.13.0</version>
+        <configuration>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>1.18.34</version>
+            </path>
+            <path>
+              <groupId>org.mapstruct</groupId>
+              <artifactId>mapstruct-processor</artifactId>
+              <version>1.6.3</version>
+            </path>
+          </annotationProcessorPaths>
         </configuration>
       </plugin>
     </plugins>

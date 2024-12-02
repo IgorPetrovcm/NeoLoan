@@ -27,3 +27,20 @@ paths:
                 type: array
                 items:
                   type: LoanOffer
+
+  /calculator/calc:
+    description: "Скоринг данных"
+    post:
+      requestBody:
+        description: "Данные для скоринга"
+        content:
+          application/json:
+            schema:
+              type: ScoringData
+      responses:
+        "201":
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                type: Credit

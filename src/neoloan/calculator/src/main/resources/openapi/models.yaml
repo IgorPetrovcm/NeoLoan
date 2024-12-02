@@ -1,0 +1,226 @@
+openapi: 3.1.0
+
+info:
+  title: "DTO models for Calculator"
+  description: "Here is a description of all DTO models for Calculator"
+  contact:
+    name: Igor Petrov
+    url: "https://github.com/IgorPetrovcm"
+  version: "1.0-SNAPSHOT"
+
+components:
+  schemas:
+    LoanStatementRequest:
+      required:
+        - amount
+        - term
+        - firstName
+        - lastName
+        - email
+        - birthdate
+        - passportSeries
+        - passportNumber
+      properties:
+        amount:
+          $ref: 'components.yaml#/components/schemas/Amount'
+        term:
+          type: integer
+          minimum: 6
+        firstName:
+          allOf:
+            - $ref: 'components.yaml#/components/schemas/Name'
+        lastName:
+          allOf:
+            - $ref: 'components.yaml#/components/schemas/Name'
+        middleName:
+          allOf:
+            - $ref: 'components.yaml#/components/schemas/Name'
+          nullable: true
+        email:
+          type: string
+          format: email
+          pattern: "^[a-z0-9A-Z_!#$%&'*+/=?`{|}~^.-]+@[a-z0-9A-Z.-]+$"
+        birthdate:
+          type: string
+          format: date
+        passportSeries:
+          type: string
+          minLength: 4
+          maxLength: 4
+        passportNumber:
+          type: string
+          minLength: 6
+          maxLength: 6
+
+    LoanOffer:
+      require:
+        - statementId
+        - requestedAmount
+        - totalAmount
+        - term
+        - rate
+        - monthlyPayment
+        - isInsuranceEnabled
+        - isSalaryClient
+      properties:
+        statementId:
+          type: string
+          format: uuid
+        requestedAmount:
+          $ref: 'components.yaml#/components/schemas/Amount'
+        totalAmount:
+          $ref: 'components.yaml#/components/schemas/Amount'
+        term:
+          type: integer
+        monthlyPayment:
+          type: number
+          format: decimal
+        rate:
+          type: number
+          format: decimal
+        isInsuranceEnabled:
+          type: boolean
+        isSalaryClient:
+          type: boolean
+
+    Employment:
+      type: object
+      required:
+        - employerINN
+        - employmentStatus
+        - salary
+        - position
+        - workExperienceCurrent
+        - workExperienceTotal
+      properties:
+        employmentStatus:
+          type: string
+          enum: ["UNEMPLOYED", "SELF_EMPLOYED", "EMPLOYED", "BUSINESS_OWNER"]
+        employerINN:
+          type: string
+        salary:
+          $ref: 'components.yaml#/components/schemas/Amount'
+        position:
+          type: string
+          enum: ["WORKER", "MID_MANAGER", "TOP_MANAGER", "OWNER"]
+        workExperienceTotal:
+          type: integer
+        workExperienceCurrent:
+          type: integer
+
+    ScoringData:
+      type: object
+      required:
+        - amount
+        - dependentAmount
+        - firstName
+        - lastName
+        - middleName
+        - gender
+        - birthdate
+        - passportSeries
+        - passportNumber
+        - passportIssueBranch
+        - passportIssueDate
+        - maritalStatus
+        - employment
+        - accountNumber
+        - isInsuranceEnabled
+        - isSalaryClient
+      properties:
+        amount:
+          $ref: 'components.yaml#/components/schemas/Amount'
+        term:
+          type: integer
+        firstName:
+          $ref: 'components.yaml#/components/schemas/Name'
+        lastName:
+          $ref: 'components.yaml#/components/schemas/Name'
+        middleName:
+          $ref: 'components.yaml#/components/schemas/Name'
+        gender:
+          type: string
+          enum: ["MALE", "FEMALE", "NON_BINARY"]
+        birthdate:
+          type: string
+          format: date
+        passportSeries:
+          type: string
+          minLength: 4
+          maxLength: 4
+        passportNumber:
+          type: string
+          minLength: 6
+          maxLength: 6
+        passportIssueDate:
+          type: string
+          format: date
+        passportIssueBranch:
+          type: string
+        maritalStatus:
+          type: string
+          enum: ["MARRIED", "DIVORCED", "SINGLE", "WIDOW_WIDOWER"]
+        dependentAmount:
+          type: integer
+        employment:
+          type: object
+          $ref: '#/components/schemas/Employment'
+        accountNumber:
+          type: string
+        isInsuranceEnabled:
+          type: boolean
+        isSalaryClient:
+          type: boolean
+
+    PaymentScheduleElement:
+      type: object
+      required:
+        - number
+        - totalAmount
+        - interestPayment
+        - debtPayment
+        - remainingDebt
+      properties:
+        number:
+          type: integer
+        date:
+          type: string
+          format: date
+        totalAmount:
+          $ref: 'components.yaml#/components/schemas/Amount'
+        interestPayment:
+          $ref: 'components.yaml#/components/schemas/Amount'
+        debtPayment:
+          $ref: 'components.yaml#/components/schemas/Amount'
+        remainingDebt:
+          $ref: 'components.yaml#/components/schemas/Amount'
+
+    Credit:
+      type: object
+      required:
+        - amount
+        - monthlyPayment
+        - rate
+        - psk
+        - isInsuranceEnabled
+        - isSalaryClient
+        - paymentSchedule
+      properties:
+        amount:
+          $ref: 'components.yaml#/components/schemas/Amount'
+        term:
+          type: integer
+        monthlyPayment:
+          $ref: 'components.yaml#/components/schemas/Amount'
+        rate:
+          $ref: 'components.yaml#/components/schemas/Amount'
+        psk:
+          $ref: 'components.yaml#/components/schemas/Amount'
+        isInsuranceEnabled:
+          type: boolean
+        isSalaryClient:
+          type: boolean
+        paymentSchedule:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentScheduleElement'
