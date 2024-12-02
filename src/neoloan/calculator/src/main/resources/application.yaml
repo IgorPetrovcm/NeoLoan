@@ -1,0 +1,13 @@
+spring:
+  profiles:
+    active: development
+---
+spring:
+  config:
+    activate:
+      on-profile: development
+offers-calculator:
+  base-rate: 12
+  base-insurance-amount: 100
+  base-insurance-rate: 2.8
+
